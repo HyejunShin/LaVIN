@@ -20,11 +20,11 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Demo")
     parser.add_argument("--server_name", type=str, default="127.0.0.1", help="server name")
     parser.add_argument("--ckpt_dir", type=str, default="../data/weights/", help="dir of pre-trained weights.")
-    parser.add_argument("--llm_model", type=str, default="13B", help="the type of llm.")
+    parser.add_argument("--llm_model", type=str, default="7B", help="the type of llm.")
     parser.add_argument("--max_seq_len", type=int, default=512, help="decoder length")
     parser.add_argument('--adapter_type', type=str, default='attn', metavar='LENGTH',choices=['block','attn'],
                         help='the insert position  of adapter layer')
-    parser.add_argument('--adapter_path', type=str, default='./15-eph-pretrain.pth',  help='path of pre-trained adapter')
+    parser.add_argument('--adapter_path', type=str, default='./LaVIN-7B/checkpoint-16.pth',  help='path of pre-trained adapter')
     parser.add_argument('--temperature', type=float, default=5., metavar='LENGTH',
                         help='the temperature of router')
     parser.add_argument('--use_vicuna',  action='store_true',   help='use vicuna weights')
@@ -174,7 +174,7 @@ with gr.Blocks() as demo:
         with gr.Column():
             chat_state = gr.State()
             img_list = gr.State()
-            chatbot = gr.Chatbot(label='LaVIN-13B')
+            chatbot = gr.Chatbot(label='LaVIN-7B')
             text_input = gr.Textbox(label='User', placeholder='Type and press Enter', interactive=True)
 
     upload_button.click(upload_img, [image, text_input, chat_state],
@@ -186,4 +186,4 @@ with gr.Blocks() as demo:
     clear.click(gradio_reset, [chat_state, img_list], [chatbot, image, text_input, upload_button, chat_state, img_list],
                 queue=False)
 
-demo.launch(share=True, enable_queue=True,server_name=args.server_name)
+demo.launch(share=True, server_name=args.server_name)
