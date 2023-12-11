@@ -133,6 +133,6 @@ def LaVIN(args):
                 param.requires_grad = False
     print(trainable_names)
     print('  + Number of trainable params: %.2fM' % (total / 1e6))
-    print(f'Dropout probability (initial): {args.dropout_prob}\nDropout variability factor: {args.dropout_var}\nDropout limit (floor or ceiling): {args.dropout_limit}')
+    print(f'Dropout probability (initial): {args.dropout_prob}\nDropout variability factor: {args.dropout_var}\nDropout limit (floor or ceiling): {args.dropout_lim}')
     return llama
 
