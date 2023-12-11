@@ -149,8 +149,11 @@ def set_MMAdapter(model, method, dim=8, s=1, set_forward=True,t=10,gradient_chec
         for _ in model.children():
             if first_iter:
                 first_iter=False
-            elif dropout_var and valid_dropout_prob(_dropout_prob,dropout_var,dropout_lim):
-                _dropout_prob *= dropout_var
+            elif dropout_var:
+                if valid_dropout_prob(_dropout_prob,dropout_var,dropout_lim):
+                    _dropout_prob *= dropout_var
+                else:
+                    _dropout_prob = dropout_lim
             if type(_) ==  lavin.model.TransformerBlock or type(_) == lavin.eval_model.TransformerBlock:
                 _.adapter_attn = RepAdapter_Router(_.dim,hidden_dim=dim,scale=s,t=t,dropout_prob=_dropout_prob)
                 _.adapter_mlp = RepAdapter_Router(_.dim,hidden_dim=dim,scale=s,t=t,dropout_prob=_dropout_prob)
@@ -170,8 +173,11 @@ def set_MMAdapter(model, method, dim=8, s=1, set_forward=True,t=10,gradient_chec
         for _ in model.children():
             if first_iter:
                 first_iter=False
-            elif dropout_var and valid_dropout_prob(_dropout_prob,dropout_var,dropout_lim):
-                _dropout_prob *= dropout_var
+            elif dropout_var:
+                if valid_dropout_prob(_dropout_prob,dropout_var,dropout_lim):
+                    _dropout_prob *= dropout_var
+                else:
+                    _dropout_prob = dropout_lim
             if type(_) == lavin.model.TransformerBlock or type(_) == lavin.eval_model.TransformerBlock:
                 _.adapter_attn = RepAdapter_Router(_.dim,hidden_dim=dim,scale=s,t=t,dropout_prob=_dropout_prob)
                 _.s = s
@@ -194,8 +200,11 @@ def set_Clip_Adapter(model, method, dim=8, s=1, set_forward=True, t=10.0, dropou
     for _ in model.children():
         if first_iter:
             first_iter=False
-        elif dropout_var and valid_dropout_prob(_dropout_prob,dropout_var,dropout_lim):
-            _dropout_prob *= dropout_var
+        elif dropout_var:
+                if valid_dropout_prob(_dropout_prob,dropout_var,dropout_lim):
+                    _dropout_prob *= dropout_var
+                else:
+                    _dropout_prob = dropout_lim
         if type(_) == ResidualAttentionBlock:
             if method=='router':
                 _.adapter_attn = RepAdapter_Router(1024, hidden_dim=dim, scale=s,  t=t, dropout_prob=_dropout_prob)
