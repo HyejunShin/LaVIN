@@ -84,6 +84,9 @@ def get_args_parser():
     parser.add_argument('--warmup_epochs', type=float, default=40, metavar='N',
                         help='epochs to warmup LR')
 
+    parser.add_argument('--dropout_var', type=float, default=1., metavar='dropout var',
+                        help='dropout variability. i.e. factor to multiply to dropout probability after each iteration')
+
     # Dataset parameters
     parser.add_argument('--data_path', default='/instruction_dataset/', type=str,
                         help='dataset path')
