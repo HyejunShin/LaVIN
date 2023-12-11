@@ -112,8 +112,8 @@ def LaVIN(args):
 
 
     if   args.adapter_type=='block' or  args.adapter_type=='attn':
-        set_MMAdapter(llama,args.adapter_type,dim=args.adapter_dim,s=args.adapter_scale,t=args.temperature,gradient_checkpointing=args.gradient_checkpointing,dropout_var=args.dropout_var)
-        set_Clip_Adapter(llama.backbone.visual,args.visual_adapter_type,dim=args.adapter_dim,s=args.adapter_scale,t=args.temperature,dropout_var=args.dropout_var)
+        set_MMAdapter(llama,args.adapter_type,dim=args.adapter_dim,s=args.adapter_scale,t=args.temperature,gradient_checkpointing=args.gradient_checkpointing,dropout_prob=args.dropout_prob,dropout_var=args.dropout_var,dropout_lim=args.dropout_lim)
+        set_Clip_Adapter(llama.backbone.visual,args.visual_adapter_type,dim=args.adapter_dim,s=args.adapter_scale,t=args.temperature,dropout_prob=args.dropout_prob,dropout_var=args.dropout_var,dropout_lim=args.dropout_lim)
 
 
 
@@ -133,6 +133,6 @@ def LaVIN(args):
                 param.requires_grad = False
     print(trainable_names)
     print('  + Number of trainable params: %.2fM' % (total / 1e6))
-    print(f'Dropout variability factor: {args.dropout_var}')
+    print(f'Dropout probability (initial): {args.dropout_prob}\nDropout variability factor: {args.dropout_var}\nDropout limit (floor or ceiling): {args.dropout_limit}')
     return llama
 

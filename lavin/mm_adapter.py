@@ -132,9 +132,16 @@ def forward_clip_full(self, x: torch.Tensor):
     x = x + self.mlp(self.adapter_mlp(self.ln_2(x)))
     return x
 
+def valid_dropout_prob(prob,variability,limit):
+    if variability < 1:
+        #  check floor
+        return (prob*variability >= limit)
+    else:
+        # check ceiling
+        return (prob*variability <= limit)
 
-def set_MMAdapter(model, method, dim=8, s=1, set_forward=True,t=10,gradient_checkpointing=False,dropout_var=1):
-    dropout_prob = 0.1
+def set_MMAdapter(model, method, dim=8, s=1, set_forward=True,t=10,gradient_checkpointing=False,dropout_prob=0.1,dropout_var=1.0,dropout_lim=0.2):
+    _dropout_prob = dropout_prob
     first_iter = True
     if method == 'block':
         # not support right now
@@ -142,11 +149,11 @@ def set_MMAdapter(model, method, dim=8, s=1, set_forward=True,t=10,gradient_chec
         for _ in model.children():
             if first_iter:
                 first_iter=False
-            else:
-                dropout_prob *= dropout_var
+            elif dropout_var and valid_dropout_prob(_dropout_prob,dropout_var,dropout_lim):
+                _dropout_prob *= dropout_var
             if type(_) ==  lavin.model.TransformerBlock or type(_) == lavin.eval_model.TransformerBlock:
-                _.adapter_attn = RepAdapter_Router(_.dim,hidden_dim=dim,scale=s,t=t,dropout_prob=dropout_prob)
-                _.adapter_mlp = RepAdapter_Router(_.dim,hidden_dim=dim,scale=s,t=t,dropout_prob=dropout_prob)
+                _.adapter_attn = RepAdapter_Router(_.dim,hidden_dim=dim,scale=s,t=t,dropout_prob=_dropout_prob)
+                _.adapter_mlp = RepAdapter_Router(_.dim,hidden_dim=dim,scale=s,t=t,dropout_prob=_dropout_prob)
                 _.s = s
                 _.t = t
                 _.gradient_checkpointing=gradient_checkpointing
@@ -157,16 +164,16 @@ def set_MMAdapter(model, method, dim=8, s=1, set_forward=True,t=10,gradient_chec
                 if set_forward:
                     setattr(_, 'forward', bound_method)
             elif len(list(_.children())) != 0:
-                set_MMAdapter(_, method, dim, s,set_forward=set_forward,t=t,gradient_checkpointing=gradient_checkpointing,dropout_var=dropout_var)
+                set_MMAdapter(_, method, dim, s,set_forward=set_forward,t=t,gradient_checkpointing=gradient_checkpointing,dropout_prob=dropout_prob,dropout_var=dropout_var,dropout_lim=dropout_lim)
 
     else:
         for _ in model.children():
             if first_iter:
                 first_iter=False
-            else:
-                dropout_prob *= dropout_var
+            elif dropout_var and valid_dropout_prob(_dropout_prob,dropout_var,dropout_lim):
+                _dropout_prob *= dropout_var
             if type(_) == lavin.model.TransformerBlock or type(_) == lavin.eval_model.TransformerBlock:
-                _.adapter_attn = RepAdapter_Router(_.dim,hidden_dim=dim,scale=s,t=t,dropout_prob=dropout_prob)
+                _.adapter_attn = RepAdapter_Router(_.dim,hidden_dim=dim,scale=s,t=t,dropout_prob=_dropout_prob)
                 _.s = s
                 _.t=t
                 _.gradient_checkpointing = gradient_checkpointing
@@ -177,26 +184,26 @@ def set_MMAdapter(model, method, dim=8, s=1, set_forward=True,t=10,gradient_chec
                 if set_forward:
                     setattr(_, 'forward', bound_method)
             elif len(list(_.children())) != 0:
-                set_MMAdapter(_, method, dim, s, set_forward=set_forward,t=t,gradient_checkpointing=gradient_checkpointing,dropout_var=dropout_var)
+                set_MMAdapter(_, method, dim, s, set_forward=set_forward,t=t,gradient_checkpointing=gradient_checkpointing,dropout_prob=dropout_prob,dropout_var=dropout_var,dropout_lim=dropout_lim)
 
 
 from clip.model import ResidualAttentionBlock
-def set_Clip_Adapter(model, method, dim=8, s=1, set_forward=True, t=10.0, dropout_var=1):
-    dropout_prob = 0.1
+def set_Clip_Adapter(model, method, dim=8, s=1, set_forward=True, t=10.0, dropout_prob=0.1, dropout_var=1.0, dropout_lim=0.2):
+    _dropout_prob = dropout_prob
     first_iter = True
     for _ in model.children():
         if first_iter:
             first_iter=False
-        elif dropout_var:
-            dropout_prob *= dropout_var
+        elif dropout_var and valid_dropout_prob(_dropout_prob,dropout_var,dropout_lim):
+            _dropout_prob *= dropout_var
         if type(_) == ResidualAttentionBlock:
             if method=='router':
-                _.adapter_attn = RepAdapter_Router(1024, hidden_dim=dim, scale=s,  t=t, dropout_prob=dropout_prob)
+                _.adapter_attn = RepAdapter_Router(1024, hidden_dim=dim, scale=s,  t=t, dropout_prob=_dropout_prob)
             elif method=='router_block':
-                _.adapter_attn = RepAdapter_Router(1024, hidden_dim=dim, scale=s,  t=t, dropout_prob=dropout_prob)
-                _.adapter_mlp = RepAdapter_Router(1024, hidden_dim=dim, scale=s,  t=t, dropout_prob=dropout_prob)
+                _.adapter_attn = RepAdapter_Router(1024, hidden_dim=dim, scale=s,  t=t, dropout_prob=_dropout_prob)
+                _.adapter_mlp = RepAdapter_Router(1024, hidden_dim=dim, scale=s,  t=t, dropout_prob=_dropout_prob)
             else:
-                _.adapter_attn = RepAdapter(1024, hidden_dim=dim, scale=s, dropout_prob=dropout_prob)
+                _.adapter_attn = RepAdapter(1024, hidden_dim=dim, scale=s, dropout_prob=_dropout_prob)
             _.s = s
             if method=='router_block':
                 bound_method = forward_clip_full.__get__(_, _.__class__)
@@ -205,4 +212,4 @@ def set_Clip_Adapter(model, method, dim=8, s=1, set_forward=True, t=10.0, dropou
             if set_forward:
                 setattr(_, 'forward', bound_method)
         elif len(list(_.children())) != 0:
-            set_Clip_Adapter(_, method, dim, s, set_forward=set_forward, t=t, dropout_var=dropout_var)
+            set_Clip_Adapter(_, method, dim, s, set_forward=set_forward, t=t, dropout_prob=dropout_prob, dropout_var=dropout_var, dropout_lim=dropout_lim)

@@ -17,7 +17,9 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 torchrun --nproc_per_node 4 --master_port 11111 tra
     --prompt_format QCM-ALE \
     --temperature 10.\
     --visual_adapter_type router \
-    --dropout_var 0.8
+    --dropout_prob 0.2 \
+    --dropout_var 0.99 \
+    --dropout_lim 0.1
 
 CUDA_VISIBLE_DEVICES=3 torchrun --nproc_per_node 1 --master_port 11111 eval.py \
     --ckpt_dir ../data/weights/ \
