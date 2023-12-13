@@ -49,3 +49,17 @@ def adjust_learning_rate_step_decay(optimizer, epoch, args):
             param_group["lr"] = lr
     return lr
 
+def adjust_learning_rate_exp_decay(optimizer, epoch, args):
+    """Natural exponential decay learning rate with warm-up"""
+    if epoch < args.warmup_epochs:
+        lr = args.lr * epoch / args.warmup_epochs
+    else:
+        min_lr = 1e-5
+        decay_factor = math.exp(math.log(min_lr / args.lr) / (args.epochs - args.warmup_epochs))
+        lr = args.lr * decay_factor ** (epoch - args.warmup_epochs)
+    for param_group in optimizer.param_groups:
+        if "lr_scale" in param_group:
+            param_group["lr"] = lr * param_group["lr_scale"]
+        else:
+            param_group["lr"] = lr
+    return lr
