@@ -1,11 +1,25 @@
 # Title
 project description
 
-## Setup
+
+## Project Milestones
+- [x] Train (original) LaVIN 7B and validate accuracy
+- [x] Train LaVIN 7B using Cyclical Learning Rate and validate accuracy
+- [x] Train LaVIN 7B using Step Decay (Learning Rate) and validate accuracy
+- [x] Train LaVIN 7B using Exponential Decay (Learning Rate) and validate accuracy
+- [x] Train LaVIN 7B having the dropout probability (in the MMA adapter) increase after each layer
+- [x] Train LaVIN 7B having the dropout probability (in the MMA adapter) decrease after each layer
+- [x] Elaborate comparative graphs
+- [x] Validate each "modification" using a live chatbot (on text questions and images)
+
+
+## Downloads
 - Install LaVIN from [official repo](https://github.com/luogen1996/LaVIN)
 - Download ScienceQA dataset from [official repo](https://github.com/lupantech/ScienceQA)
 - Download [LLaMA-7B](https://huggingface.co/nyanko7/LLaMA-7B/tree/main) from HuggingFace
-  
+
+
+## Repository and Code Structure
 ```bash
 LaVIN/
   |-- lavin
@@ -28,6 +42,8 @@ data/
           |-- consolidated.00.pth
 ```
 
+
+## Commands to Execute the Code
 To run the project:
 ```bash
 bash ./scripts/finetuning_sqa_7b.sh
@@ -74,10 +90,13 @@ CUDA_VISIBLE_DEVICES=3 torchrun --nproc_per_node 1 --master_port 11111 eval.py \
     --visual_adapter_type router
 ```
 
+
 ## Results
 
 
+
 ## Demo
+
 
 
 ## References
