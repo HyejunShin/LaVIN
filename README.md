@@ -92,6 +92,7 @@ CUDA_VISIBLE_DEVICES=3 torchrun --nproc_per_node 1 --master_port 11111 eval.py \
 
 
 ## Results
+### Table
 | Method             |   NAT |   SOC |   LAN |   TXT |   IMG |    NO |   G1-6 |   G7-12 |   Average |
 |:-------------------|------:|------:|------:|------:|------:|------:|-------:|--------:|----------:|
 | Base               | 88.45 | 94.71 | 84.82 | 87.59 | 86.37 | 87.8  |  90.2  |   86.35 |     88.82 |
