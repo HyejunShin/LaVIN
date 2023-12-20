@@ -112,6 +112,7 @@ def LaVIN(args):
 
 
     if   args.adapter_type=='block' or  args.adapter_type=='attn':
+        # Add adapter to NN
         set_MMAdapter(llama,args.adapter_type,dim=args.adapter_dim,s=args.adapter_scale,t=args.temperature,gradient_checkpointing=args.gradient_checkpointing,dropout_prob=args.dropout_prob,dropout_var=args.dropout_var,dropout_lim=args.dropout_lim)
         set_Clip_Adapter(llama.backbone.visual,args.visual_adapter_type,dim=args.adapter_dim,s=args.adapter_scale,t=args.temperature,dropout_prob=args.dropout_prob,dropout_var=args.dropout_var,dropout_lim=args.dropout_lim)
 

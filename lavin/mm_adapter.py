@@ -27,7 +27,7 @@ class RepAdapter_Router(nn.Module):
 
         self.expert_weights=nn.Linear(in_features,2)
 
-        self.dropout=nn.Dropout(dropout_prob)
+        self.dropout=nn.Dropout(dropout_prob) # new dropout modification
         self.groups=groups
         self.scale=scale
         self.t=t
@@ -46,7 +46,7 @@ class RepAdapter_Router(nn.Module):
             if weights is None:
                 weights=torch.softmax(self.expert_weights(x[:,0])/self.t,-1).half()
             x=x.transpose(1,2)
-            x_=self.dropout(self.conv_A(x))
+            x_=self.dropout(self.conv_A(x)) # Dropout applied to Conv layer A of the adapter
             x=self.conv_B(x_)*self.scale*weights[:,0,None,None]+self.conv_D(x_)*self.scale*weights[:,1,None,None]+x
             x=x.transpose(1,2).contiguous()
         return x
@@ -133,6 +133,7 @@ def forward_clip_full(self, x: torch.Tensor):
     return x
 
 def valid_dropout_prob(prob,variability,limit):
+    # Checks if modifying the dropout probability is still valid
     if variability < 1:
         #  check floor
         return (prob*variability >= limit)
@@ -151,6 +152,7 @@ def set_MMAdapter(model, method, dim=8, s=1, set_forward=True,t=10,gradient_chec
                 first_iter=False
             elif dropout_var:
                 if valid_dropout_prob(_dropout_prob,dropout_var,dropout_lim):
+                    # Updating dropout probability after each iteration
                     _dropout_prob *= dropout_var
                 else:
                     _dropout_prob = dropout_lim
@@ -175,6 +177,7 @@ def set_MMAdapter(model, method, dim=8, s=1, set_forward=True,t=10,gradient_chec
                 first_iter=False
             elif dropout_var:
                 if valid_dropout_prob(_dropout_prob,dropout_var,dropout_lim):
+                    # Updating dropout probability after each iteration
                     _dropout_prob *= dropout_var
                 else:
                     _dropout_prob = dropout_lim
@@ -202,6 +205,7 @@ def set_Clip_Adapter(model, method, dim=8, s=1, set_forward=True, t=10.0, dropou
             first_iter=False
         elif dropout_var:
                 if valid_dropout_prob(_dropout_prob,dropout_var,dropout_lim):
+                    # Updating dropout probability after each iteration
                     _dropout_prob *= dropout_var
                 else:
                     _dropout_prob = dropout_lim
