@@ -16,7 +16,7 @@ Our foal is to extend the capabilities of LLMs for multimodal tasks by efficient
 - [x] Validate each "modification" using a live chatbot (on text questions and images)
 
 
-## Downloads
+## Installation and Downloads
 - Install LaVIN from [official repo](https://github.com/luogen1996/LaVIN)
 - Download ScienceQA dataset from [official repo](https://github.com/lupantech/ScienceQA)
 - Download [LLaMA-7B](https://huggingface.co/nyanko7/LLaMA-7B/tree/main) from HuggingFace
@@ -114,12 +114,17 @@ The idea of implementing different learning rates arises from the classic proble
 We implemented a slight modification to the MMA adapter used in LaVIN. This modification consists in continuously modifying the dropout probability of the adapter’s nodes after every layer, until it reaches a certain limit. To achieve this, we implemented teh following new hyper-parameters:
 - dropout_prob : the initial dropout probability (range 0-1)
 - dropout_lim : the limit set for the dropout probability. Once this limit is reached, the dropout probability is no longer modified.
-- dropout_var : the dropout variability factor. This factor controls how the dropout probability is changed after every layer. Is described as:
+- dropout_var : the dropout variability factor. This factor controls how the dropout probability is changed after every layer. Formally described as:
 
-When increasing the dropout probability after every layer, dropout_lim represents the "ceiling limit" and dropout_var > 1. More formally:
+![](./assets/general_dp_eq.png)
 
-When decresing the dropout probability after every layer, dropout_lim represents the "floor limit" and dropout_var < 1. More formally:
+where $p_i$ is the dropout probability for layer i
 
+When increasing the dropout probability after every layer, dropout_lim represents the "ceiling limit" and dropout_var > 1. More specifically:
+![](./assets/increasing_dp_eq.png)
+
+When decresing the dropout probability after every layer, dropout_lim represents the "floor limit" and dropout_var < 1. More specifically:
+![](./assets/decreasing_dp_eq.png)
 
 ## Experiment and Results
 
@@ -157,6 +162,8 @@ Observation, we ran two experiments for each Increasing Dropout Probability and 
 
 ## Demo
 [View demo here](https://drive.google.com/file/d/10HibI0_xwqL7hfBdDYaVGuj3yOTuCpPS/view?usp=sharing)
+
+![](./assets/demo_results.png)
 
 ## Observations and Conclusion
 - None of the adjustments surpassed the baseline model's performance.
