@@ -16,13 +16,11 @@ Our foal is to extend the capabilities of LLMs for multimodal tasks by efficient
 - [x] Elaborate comparative graphs
 - [x] Validate each "modification" using a live chatbot (on text questions and images)
 
-
 ## Installation and Downloads
 
 - Install LaVIN's requirement following [official repo](https://github.com/luogen1996/LaVIN) setup
 - Download ScienceQA dataset from [official repo](https://github.com/lupantech/ScienceQA)
 - Download [LLaMA-7B](https://huggingface.co/nyanko7/LLaMA-7B/tree/main) from HuggingFace
-
 
 ## Repository and Code Structure
 
@@ -47,7 +45,6 @@ data/
           |-- params.json
           |-- consolidated.00.pth
 ```
-
 
 ## Commands to Execute the Fine-tunning of the Model
 
@@ -180,26 +177,16 @@ Observation, we ran two experiments for each Increasing Dropout Probability and 
 
 ### Other Graphs
 
-![](./assets/download.png)
-
-![](./assets/download-1.png)
-
-![](./assets/download-2.png)
-
-![](./assets/download-3.png)
-
-![](./assets/download-4.png)
-
-![](./assets/download-5.png)
-
-![](./assets/download-6.png)
-
-![](./assets/download-7.png)
-
-![](./assets/download-8.png)
-
-![](./assets/download-9.png)
-
+<img src="./assets/download.png" width="300">
+<img src="./assets/download-1.png" width="300">
+<img src="./assets/download-2.png" width="300">
+<img src="./assets/download-3.png" width="300">
+<img src="./assets/download-4.png" width="300">
+<img src="./assets/download-5.png" width="300">
+<img src="./assets/download-6.png" width="300">
+<img src="./assets/download-7.png" width="300">
+<img src="./assets/download-8.png" width="300">
+<img src="./assets/download-9.png" width="300">
 
 ## Demo
 
@@ -214,7 +201,6 @@ Observation, we ran two experiments for each Increasing Dropout Probability and 
 - This suggests that LaVIN 7B is already highly optimized for the multimodal tasks.
 - Out of the modified models, Dec. Drop. Prob V2 performed the best. 
 - Future work may explore combining these modifications or experimenting with other hyperparameters to potentially exceed the baseline model's performance.
-
 
 ## References
 
