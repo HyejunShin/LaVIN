@@ -84,6 +84,7 @@ def get_args_parser():
     parser.add_argument('--warmup_epochs', type=float, default=40, metavar='N',
                         help='epochs to warmup LR')
 
+    # New dropout hyperparameters
     parser.add_argument('--dropout_prob', type=float, default=0.1, metavar='dropout probability',
                         help='(initial) dropout probability used for the adapter')
     parser.add_argument('--dropout_var', type=float, default=1., metavar='dropout var',
