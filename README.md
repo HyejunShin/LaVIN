@@ -119,7 +119,11 @@ The idea of implementing different learning rates arises from the classic proble
 
 ### Adapter's modifications
 
-We implemented a slight modification to the MMA adapter used in LaVIN. This modification consists in continuously modifying the dropout probability of the adapter’s nodes after every layer, until it reaches a certain limit. To achieve this, we implemented teh following new hyper-parameters:
+We implemented a slight modification to the MMA adapter used in LaVIN. This modification consists in continuously modifying the dropout probability of the adapter’s nodes after every layer, until it reaches a certain limit. This modification idea arises from the fact that during fine-tuning, shallow layers are typically less dependent on the pre-trained (source) model compared to deeper layers, since they capture more general information. Hence, by modifying the dropout of shallow/deeper layer's nodes, we might get a model with a better fit or generalization.
+
+> Also, by dropping more nodes (as the dropout probability increases) the training time should also be reduced since there are less nodes during training
+
+To achieve this, we implemented teh following new hyper-parameters:
 - dropout_prob : the initial dropout probability (range 0-1)
 - dropout_lim : the limit set for the dropout probability. Once this limit is reached, the dropout probability is no longer modified.
 - dropout_var : the dropout variability factor. This factor controls how the dropout probability is changed after every layer. Formally described as:
@@ -144,22 +148,37 @@ Each experiment was run using 4xV100 GPUs on Greene NYU HPC.
 
 > Note: Fine-tuning LaVIN-7B requires at least 33GB per GPU when using batch-size=4. Since we worked with V100 GPUs, we used batch-size=2
 
-### Results Table
+### Results Tables
 
 Observation, we ran two experiments for each Increasing Dropout Probability and Decreasing Dropout Probability after every layer; each with different hyperparameters values. For Increasing prob. we used {dropout_lim=0.2, dropout_prob=0.1, dropout_var=1.01} and {dropout_lim=0.2, dropout_prob=0.1, dropout_var=1.03}. The later is refered as V2. For Decreasing prob. we used {dropout_lim=0.1, dropout_prob=0.2, dropout_var=0.99} and dropout_lim=0.1, dropout_prob=0.2, dropout_var=0.97}. The later is refered as V2. 
 
-| Method             |   NAT |   SOC |   LAN |   TXT |   IMG |    NO |   G1-6 |   G7-12 |   Average |
-|:-------------------|------:|------:|------:|------:|------:|------:|-------:|--------:|----------:|
-| Base               | 88.45 | 94.71 | 84.82 | 87.59 | 86.37 | 87.8  |  90.2  |   86.35 |     88.82 |
-| Cyclical LR        | 85.48 | 92.58 | 82.18 | 84.51 | 83.44 | 84.88 |  87.15 |   84.25 |     86.11 |
-| Step Decay         | 86.23 | 94.15 | 83.27 | 85.34 | 85.42 | 86.48 |  88.36 |   84.9  |     87.13 |
-| Exp. Decay         | 85.52 | 93.59 | 81.45 | 84.51 | 83.99 | 84.88 |  87.67 |   83.45 |     86.16 |
-| Inc. Drop. Prob    | 86.5  | 93.03 | 83.82 | 85.78 | 84.18 | 86.69 |  88.62 |   84.57 |     87.17 |
-| Dec. Drop. Prob    | 87.21 | 94.6  | 82.82 | 86.22 | 86.02 | 86.27 |  89.35 |   84.51 |     87.62 |
-| Inc. Drop. Prob V2 | 86.63 | 94.15 | 83.73 | 85.63 | 85.23 | 87.25 |  88.58 |   85.43 |     87.46 |
-| Dec. Drop. Prob V2 | 87.57 | 94.15 | 83.73 | 86.51 | 85.37 | 87.11 |  89.35 |   85.43 |     87.95 |
+#### Accuracy:
 
-### Graphs
+| Method             |   NAT     |   SOC     |   LAN     |   TXT     |   IMG     |    NO     |   G1-6     |   G7-12     |   Average     |
+|:-------------------|----------:|----------:|----------:|----------:|----------:|----------:|-----------:|------------:|--------------:|
+| **Base LaVIN 7B**  | **88.45** | **94.71** | **84.82** | **87.59** | **86.37** | **87.80** |  **90.20** |   **86.35** |     **88.82** |
+| Cyclical LR        | 85.48     | 92.58     | 82.18     | 84.51     | 83.44     | 84.88     |  87.15     |   84.25     |     86.11     |
+| Step Decay         | 86.23     | **94.15** | 83.27     | 85.34     | 85.42     | 86.48     |  88.36     |   84.90     |     87.13     |
+| Exp. Decay         | 85.52     | 93.59     | 81.45     | 84.51     | 83.99     | 84.88     |  87.67     |   83.45     |     86.16     |
+| Inc. Drop. Prob    | 86.50     | 93.03     | **83.82** | 85.78     | 84.18     | 86.69     |  88.62     |   84.57     |     87.17     |
+| Dec. Drop. Prob    | 87.21     | 94.60     | 82.82     | 86.22     | **86.02** | 86.27     |  **89.35** |   84.51     |     87.62     |
+| Inc. Drop. Prob V2 | 86.63     | **94.15** | 83.73     | 85.63     | 85.23     | **87.25** |  88.58     |   **85.43** |     87.46     |
+| Dec. Drop. Prob V2 | **87.57** | **94.15** | 83.73     | **86.51** | 85.37     | 87.11     |  **89.35** |   **85.43** |     **87.95** |
+
+#### Training Time
+
+| Method             |   Time (hh:mm:ss) |
+|:-------------------|------------------:|
+| Base               | 6:05:52           |
+| Cyclical LR        | 6:07:56           |
+| Step Decay         | 6:08:43           |
+| Exp. Decay         | 6:09:05           |
+| Inc. Drop. Prob    | 6:07:32           |
+| Dec. Drop. Prob    | 6:08:03           |
+| Inc. Drop. Prob V2 | **6:03:34**       |
+| Dec. Drop. Prob V2 | 6:10:35           |
+
+### Other Graphs
 
 ![](./assets/download.png)
 
@@ -191,6 +210,7 @@ Observation, we ran two experiments for each Increasing Dropout Probability and 
 ## Observations and Conclusion
 
 - None of the adjustments surpassed the baseline model's performance.
+- Traning time did not change in a considerable way with the different adjustments.
 - This suggests that LaVIN 7B is already highly optimized for the multimodal tasks.
 - Out of the modified models, Dec. Drop. Prob V2 performed the best. 
 - Future work may explore combining these modifications or experimenting with other hyperparameters to potentially exceed the baseline model's performance.
