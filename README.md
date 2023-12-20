@@ -17,7 +17,7 @@ Our foal is to extend the capabilities of LLMs for multimodal tasks by efficient
 
 
 ## Installation and Downloads
-- Install LaVIN from [official repo](https://github.com/luogen1996/LaVIN)
+- Install LaVIN's requirement following [official repo](https://github.com/luogen1996/LaVIN) setup
 - Download ScienceQA dataset from [official repo](https://github.com/lupantech/ScienceQA)
 - Download [LLaMA-7B](https://huggingface.co/nyanko7/LLaMA-7B/tree/main) from HuggingFace
 
@@ -94,9 +94,9 @@ CUDA_VISIBLE_DEVICES=3 torchrun --nproc_per_node 1 --master_port 11111 eval.py \
 ```
 
 ### Other commands
-We provided with different bash files to finetune LaVIN using the different [modifications]() we proposed, this files are located in `./scripts/1`. To finetune LaVIN-7B using different learning reates schedulers, you can check `./utils/lr_sched.py`. 
+We provided with different bash files to finetune LaVIN using the different [modifications](#modifications-and-variations) we proposed, this files are located in `./scripts/1`. To finetune LaVIN-7B using different learning reates schedulers, you can check `./utils/lr_sched.py`. 
 
-## Modifications/Variations
+## Modifications and Variations
 We proposed and implemented the following modifications to LaVIN:
 
 - Learning Rate Scheduler modifications:
