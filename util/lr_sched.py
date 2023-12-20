@@ -6,6 +6,7 @@
 
 import math
 
+# base: cosine decay learning rate schedular
 def adjust_learning_rate(optimizer, epoch, args):
     """Decay the learning rate with half-cycle cosine after warmup"""
     if epoch < args.warmup_epochs:
@@ -20,6 +21,7 @@ def adjust_learning_rate(optimizer, epoch, args):
             param_group["lr"] = lr
     return lr
 
+# adding the triangular2 learning rate schedular
 def adjust_learning_rate_triangular2(optimizer, epoch, args):
     """Decay the learning rate with triangular2"""
     num_cycles = 5
@@ -34,6 +36,7 @@ def adjust_learning_rate_triangular2(optimizer, epoch, args):
             param_group["lr"] = lr
     return lr
 
+# adding the step decay learning rate schedular
 def adjust_learning_rate_step_decay(optimizer, epoch, args):
     """Decay the learning rate with step decay after warmup"""
     if epoch < args.warmup_epochs:
@@ -49,6 +52,7 @@ def adjust_learning_rate_step_decay(optimizer, epoch, args):
             param_group["lr"] = lr
     return lr
 
+# adding the exponential decay learning rate schedular
 def adjust_learning_rate_exp_decay(optimizer, epoch, args):
     """Natural exponential decay learning rate with warm-up"""
     if epoch < args.warmup_epochs:
