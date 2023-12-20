@@ -177,16 +177,16 @@ Observation, we ran two experiments for each Increasing Dropout Probability and 
 
 ### Other Graphs
 
-<img src="./assets/download.png" width="300">
-<img src="./assets/download-1.png" width="300">
-<img src="./assets/download-2.png" width="300">
-<img src="./assets/download-3.png" width="300">
-<img src="./assets/download-4.png" width="300">
-<img src="./assets/download-5.png" width="300">
-<img src="./assets/download-6.png" width="300">
-<img src="./assets/download-7.png" width="300">
-<img src="./assets/download-8.png" width="300">
-<img src="./assets/download-9.png" width="300">
+<img src="./assets/download.png" width="600">
+<img src="./assets/download-1.png" width="600">
+<img src="./assets/download-2.png" width="600">
+<img src="./assets/download-3.png" width="600">
+<img src="./assets/download-4.png" width="600">
+<img src="./assets/download-5.png" width="600">
+<img src="./assets/download-6.png" width="600">
+<img src="./assets/download-7.png" width="600">
+<img src="./assets/download-8.png" width="600">
+<img src="./assets/download-9.png" width="600">
 
 ## Demo
 
