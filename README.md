@@ -106,7 +106,7 @@ We provided with different bash files to finetune LaVIN using the different [mod
 We proposed and implemented the following modifications to LaVIN:
 
 - Learning Rate Scheduler modifications:
-  - Cyclical Learning Rate 
+  - Cyclical Learning Rate (Triangular2)
   - Step Decay
   - Exponential Decay
 - Adapter's modifications:
@@ -115,7 +115,7 @@ We proposed and implemented the following modifications to LaVIN:
  
 ### Learning Rate Scheduler modifications
 
-The idea of implementing different learning rates arises from the classic problem associated with neural networks: hyperparameter fine-tuning. By default, LaVIN implements XXX. On our part, we have implemented the following well-known algorithms: Cyclical Learning Rate, Step Decay, and Exponential Decay to experiment and evaluate the results of using these learning rates schedulers instead of the one used by the original implementation.
+The idea of implementing different learning rates arises from the classic problem associated with neural networks: hyperparameter fine-tuning. By default, LaVIN implements half-cycle cosine learning rate scheduler. On our part, we have implemented the following well-known algorithms: Cyclical Learning Rate (Triangular2), Step Decay, and Exponential Decay to experiment and evaluate the results of using these learning rates schedulers instead of the one used by the original implementation.
 
 ### Adapter's modifications
 
