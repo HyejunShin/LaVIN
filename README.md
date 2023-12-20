@@ -204,6 +204,7 @@ Observation, we ran two experiments for each Increasing Dropout Probability and 
 ## Demo
 
 [View demo here](https://drive.google.com/file/d/10HibI0_xwqL7hfBdDYaVGuj3yOTuCpPS/view?usp=sharing)
+![](./assets/IDLS_demo.mp4)
 
 ![](./assets/demo_results.png)
 
