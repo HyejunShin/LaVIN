@@ -120,7 +120,7 @@ We implemented a slight modification to the MMA adapter used in LaVIN. This modi
 
 > Also, by dropping more nodes (as the dropout probability increases) the training time should also be reduced since there are less nodes during training
 
-To achieve this, we implemented teh following new hyper-parameters:
+To achieve this, we implemented the following new hyper-parameters:
 - dropout_prob : the initial dropout probability (range 0-1)
 - dropout_lim : the limit set for the dropout probability. Once this limit is reached, the dropout probability is no longer modified.
 - dropout_var : the dropout variability factor. This factor controls how the dropout probability is changed after every layer. Formally described as:
